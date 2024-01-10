@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 const axiosInstance = axios.create({
   baseURL: process.env.REACT_APP_SERVER_URL,
-  timeout: 5000,
+  timeout: 500000,
 });
 
 const token = localStorage.getItem("token");

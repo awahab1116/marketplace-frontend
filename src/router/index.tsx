@@ -27,7 +27,7 @@ const AppRouter: React.FC = () => {
           }
         />
         <Route
-          path="/:orderID/order-details"
+          path="/:orderId/order-details"
           element={
             <ProtectedRoutes>
               <OrderDetails />
