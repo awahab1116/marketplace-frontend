@@ -1,78 +1,43 @@
-import React, { useState, useEffect } from "react";
-import { viewOrder } from "../../Api/viewOrder";
+import React from "react";
 import { Order } from "../../interfaces/order.interface";
-import { useParams } from "react-router-dom";
-//import { useSocket } from "../../socket/useSocket";
-import socketIOClient, { Socket } from "socket.io-client";
-import { socket } from "../../socket/useSocket";
+import { Chip, Typography, Paper, Grid } from "@mui/material";
 
-interface RouteParams {
-  orderId: string;
+interface OrderDetailsProps {
+  order: Order | null;
 }
 
-const OrderDeatils: React.FC = () => {
-  console.log("order details");
-  const { orderId } = useParams();
-  const [order, setOrder] = useState<Order | null>(null);
-
-  const [isConnected, setIsConnected] = useState(false);
-
-  useEffect(() => {
-    viewOrder(orderId)
-      .then((data) => {
-        console.log("Order data is ", data);
-        setOrder(data);
-      })
-      .catch((error) => {});
-  }, [orderId]);
-
-  useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
-      setIsConnected(false);
-    }
-
-    function connectedUser(...args: any[]) {
-      console.log("Connected user is ", args);
-    }
-
-    function updatedOrder(data: any) {
-      console.log("Updated Order is ", data);
-      setOrder(data?.order ? data?.order : order);
-    }
-
-    // const listener = (...args: any) => {
-    //   console.log(args);
-    // };
-
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("connection", connectedUser);
-    socket.on("order-status-changed", updatedOrder);
-
-    return () => {
-      socket.off("connection");
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      //socket.removeAllListeners();
-      //socket.disconnect();
-    };
-  }, []);
-
+const OrderDetailsComponent: React.FC<OrderDetailsProps> = ({ order }) => {
   return (
     <>
-      <div>Order Details Page</div>
-      {order && (
-        <div>
-          <h3>{order.id}</h3>
-          <h4>{order.status}</h4>
-        </div>
-      )}
+      <Paper style={{ padding: "20px", margin: "20px" }} elevation={3}>
+        <Typography variant="h5" gutterBottom>
+          Order Details
+        </Typography>
+        {order && (
+          <>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h6">Order ID: {order.id}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1">
+                  Total Amount: {order.totalAmount}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1">Status:</Typography>
+                <Chip
+                  label={order.status}
+                  color={order.status === "confirmed" ? "success" : "default"}
+                  style={{ marginRight: "8px" }}
+                />
+              </Grid>
+            </Grid>
+          </>
+        )}
+      </Paper>
     </>
   );
 };
 
-export default OrderDeatils;
+export default OrderDetailsComponent;

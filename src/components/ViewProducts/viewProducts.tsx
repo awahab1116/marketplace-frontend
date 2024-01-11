@@ -1,5 +1,5 @@
 // src/components/ViewProducts.tsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Grid,
   Card,
@@ -13,68 +13,25 @@ import {
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import CartDialog from "../../components/Cart/cart";
-import { viewProducts } from "../../Api/viewProducts";
 import { Product } from "../../interfaces/product.interface";
 
-// interface Product {
-//   id: number;
-//   name: string;
-//   image: string;
-//   description: string;
-// }
+interface ViewProductsProps {
+  productList: Product[];
+  cartItems: Product[];
+  isCartDialogOpen: boolean;
+  addToCart: (product: Product) => void;
+  openCartDialog: () => void;
+  closeCartDialog: () => void;
+}
 
-// const productData: Product[] = [
-//   {
-//     id: 1,
-//     name: "Product 1",
-//     image: "https://placekitten.com/200/300",
-//     description: "Description of Product 1",
-//   },
-//   {
-//     id: 2,
-//     name: "Product 2",
-//     image: "https://placekitten.com/200/301",
-//     description: "Description of Product 2",
-//   },
-//   // Add more product data as needed
-// ];
-
-const ViewProducts: React.FC = () => {
-  const [productList, setProductList] = useState<Product[]>([]);
-  const [cartItems, setCartItems] = useState<Product[]>([]);
-  const [isCartDialogOpen, setIsCartDialogOpen] = useState(false);
-
-  useEffect(() => {
-    viewProducts()
-      .then((products) => {
-        setProductList(products);
-      })
-      .catch((error) => {});
-  }, []);
-
-  const addToCart = (product: Product) => {
-    // Check if the product is already in the cart
-    const isProductInCart = cartItems.some((item) => item.id === product.id);
-
-    if (!isProductInCart) {
-      // If not in the cart, add it
-      setCartItems((prevCartItems) => [...prevCartItems, product]);
-    } else {
-      // If already in the cart, remove it
-      setCartItems((prevCartItems) =>
-        prevCartItems.filter((item) => item.id !== product.id)
-      );
-    }
-  };
-
-  const openCartDialog = () => {
-    setIsCartDialogOpen(true);
-  };
-
-  const closeCartDialog = () => {
-    setIsCartDialogOpen(false);
-  };
-
+const ViewProducts: React.FC<ViewProductsProps> = ({
+  productList,
+  cartItems,
+  isCartDialogOpen,
+  addToCart,
+  openCartDialog,
+  closeCartDialog,
+}) => {
   return (
     <div>
       <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>

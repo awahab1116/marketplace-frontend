@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ViewProducts from "../components/ViewProducts/viewProducts";
+import ViewProductsPage from "../Pages/ViewProducts/viewProductsPage";
 import LoginPage from "../Pages/LoginPage/loginPage";
 import ProtectedRoutes from "./protectedRoutes";
-import OrderDetails from "../components/OrderDetails/orderDetails";
+import OrderDetailsPage from "../Pages/ViewOrder/viewOrder";
 
 const AppRouter: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ const AppRouter: React.FC = () => {
           path="/view-products"
           element={
             <ProtectedRoutes>
-              <ViewProducts />
+              <ViewProductsPage />
             </ProtectedRoutes>
           }
         />
@@ -30,7 +30,7 @@ const AppRouter: React.FC = () => {
           path="/:orderId/order-details"
           element={
             <ProtectedRoutes>
-              <OrderDetails />
+              <OrderDetailsPage />
             </ProtectedRoutes>
           }
         />
