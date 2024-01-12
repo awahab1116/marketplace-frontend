@@ -18,7 +18,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // You can perform validation and other checks here before calling onLogin
     onLogin(email, password);
   };
 

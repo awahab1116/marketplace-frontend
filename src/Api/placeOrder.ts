@@ -1,11 +1,8 @@
 import { AxiosRequestConfig } from "axios";
 import { apiRequest } from "./axiosRequest";
+import { PlaceOrderBody } from "../interfaces/placeOrderBody.interface";
 
-interface PlaceOrderBody {
-  productIds: number[];
-}
-
-export const placeOrder = async (data: PlaceOrderBody): Promise<string> => {
+export const placeOrder = async (data: PlaceOrderBody[]): Promise<string> => {
   const config: AxiosRequestConfig = {
     method: "POST",
     url: "/order/place",

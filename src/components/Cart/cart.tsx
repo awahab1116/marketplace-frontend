@@ -13,6 +13,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { Product } from "../../interfaces/product.interface";
 import { placeOrder } from "../../Api/placeOrder";
+import { PlaceOrderBody } from "../../interfaces/placeOrderBody.interface";
 
 interface CartDialogProps {
   open: boolean;
@@ -26,9 +27,12 @@ const CartDialog: React.FC<CartDialogProps> = ({
   cartItems,
 }) => {
   const handlePlaceOrder = async () => {
-    const productIds: number[] = cartItems.map((product) => product.id);
+    const productData: PlaceOrderBody[] = cartItems.map((product) => ({
+      productId: product.id,
+      quantity: product.quantity,
+    }));
 
-    placeOrder({ productIds })
+    placeOrder(productData)
       .then((stripeCheckoutLink) => {
         window.location.href = stripeCheckoutLink;
       })
@@ -42,7 +46,10 @@ const CartDialog: React.FC<CartDialogProps> = ({
         <List>
           {cartItems.map((item) => (
             <ListItem key={item.id}>
-              <ListItemText primary={item.name} secondary={`Quantity: 1`} />
+              <ListItemText
+                primary={item.name}
+                secondary={`Quantity: ${item.quantity}`}
+              />
             </ListItem>
           ))}
         </List>

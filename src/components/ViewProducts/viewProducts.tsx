@@ -1,5 +1,5 @@
 // src/components/ViewProducts.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   Grid,
   Card,
@@ -9,6 +9,8 @@ import {
   Paper,
   IconButton,
   Badge,
+  TextField,
+  Box,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -16,22 +18,34 @@ import CartDialog from "../../components/Cart/cart";
 import { Product } from "../../interfaces/product.interface";
 
 interface ViewProductsProps {
+  quantity: number[];
   productList: Product[];
   cartItems: Product[];
   isCartDialogOpen: boolean;
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, quantity: number) => void;
   openCartDialog: () => void;
   closeCartDialog: () => void;
+  handleQuantityChange: (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => void;
 }
 
 const ViewProducts: React.FC<ViewProductsProps> = ({
+  quantity,
   productList,
   cartItems,
   isCartDialogOpen,
   addToCart,
   openCartDialog,
   closeCartDialog,
+  handleQuantityChange,
 }) => {
+  // const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const newQuantity = parseInt(event.target.value, 10);
+  //   setQuantity(isNaN(newQuantity) ? 1 : Math.max(1, newQuantity));
+  // };
+
   return (
     <div>
       <Paper elevation={3} style={{ padding: "20px", marginBottom: "20px" }}>
@@ -44,7 +58,7 @@ const ViewProducts: React.FC<ViewProductsProps> = ({
       </Paper>
       <Grid container spacing={2}>
         {productList &&
-          productList.map((product) => (
+          productList.map((product, index) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
               <Card>
                 <CardMedia
@@ -64,13 +78,29 @@ const ViewProducts: React.FC<ViewProductsProps> = ({
                   <Typography variant="body2" color="text.secondary">
                     {product.description}
                   </Typography>
-                  <IconButton onClick={() => addToCart(product)}>
-                    {cartItems.some((item) => item.id === product.id) ? (
-                      <ShoppingCartIcon />
-                    ) : (
-                      <AddShoppingCartIcon />
-                    )}
-                  </IconButton>
+                  <Box display="flex" alignItems="center">
+                    <TextField
+                      type="number"
+                      label="Quantity"
+                      variant="outlined"
+                      defaultValue={quantity[index]}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        handleQuantityChange(index, e)
+                      }
+                      inputProps={{ min: 1, max: product.quantity }}
+                      style={{ marginRight: "10px", width: "60px" }}
+                    />
+                    <IconButton
+                      onClick={() => addToCart(product, quantity[index])}
+                      color="primary"
+                    >
+                      {cartItems.some((item) => item.id === product.id) ? (
+                        <ShoppingCartIcon />
+                      ) : (
+                        <AddShoppingCartIcon />
+                      )}
+                    </IconButton>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>
